@@ -69,7 +69,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BitmapUtility.cpp" />
+    <ClCompile Include="UnmanagedBitmap.cpp" />
+    <ClCompile Include="UnmanagedCachedBitmap.cpp" />
+    <ClCompile Include="UnmanagedGraphics.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IBitmap.h" />
+    <ClInclude Include="ICachedBitmap.h" />
+    <ClInclude Include="IGraphics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,6 +12,12 @@ namespace CachedBitmapUtility {
 				CachedBitmap* result = new CachedBitmap((Bitmap*)bitmapPtr, &graphics);
 				return result;
 			}
+			static void* LockGraphics(void* hdc) {
+				return new Graphics((HDC)hdc);
+			}
+			static void ReleaseGraphics(void* graphicsPtr) {
+				delete (Graphics*)graphicsPtr;
+			}
 			static void DisposeCachedBitmap(void* cachedBitmapPtr) {
 				delete (CachedBitmap*)cachedBitmapPtr;
 			}
@@ -21,10 +27,8 @@ namespace CachedBitmapUtility {
 			static void* GetBitmapPtrFromHICON(void* hicon) {
 				return (void*)Bitmap::FromHICON((HICON)hicon);
 			}
-			static void DrawCachedBitmap(void* hdc, void* cachedBitmapPtr, int x, int y) {
-				Graphics graphics((HDC)hdc);
-				graphics.DrawCachedBitmap((CachedBitmap*)cachedBitmapPtr, x, y);
-
+			static void DrawCachedBitmap(void* graphicsPtr, void* cachedBitmapPtr, int x, int y) {
+				((Graphics*)graphicsPtr)->DrawCachedBitmap((CachedBitmap*)cachedBitmapPtr, x, y);
 			}
 	};
 }

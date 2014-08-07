@@ -5,45 +5,34 @@ using CachedBitmapUtility;
 
 namespace FormApplication {
   public partial class MainForm : Form {
-    IntPtr m_BitmapPtr;
-    IntPtr m_CachedBitmapPtr = IntPtr.Zero;
+    private UnmanagedCachedBitmap m_CachedBitmap;
+    private UnmanagedBitmap m_Bitmap;
 
     public MainForm() {
       InitializeComponent();
 
-      Bitmap bitmap;
       using (var stream = typeof(MainForm).Assembly.GetManifestResourceStream("FormApplication.character.png")) {
-        bitmap = (Bitmap)Bitmap.FromStream(stream);
-      }
-      unsafe {
-        m_BitmapPtr = (IntPtr)BitmapUtility.GetBitmapPtrFromHICON((void*)bitmap.GetHicon());
-      }
-    }
-
-    protected override void OnClosed(EventArgs e) {
-      // TODO: refactor - dispose should happen in Dispose event
-      unsafe {
-        BitmapUtility.DisposeBitmap((void*)m_BitmapPtr);
-        BitmapUtility.DisposeCachedBitmap((void*)m_CachedBitmapPtr);
+        var bitmap = (Bitmap)Bitmap.FromStream(stream);
+        m_Bitmap = UnmanagedBitmap.FromHicon(bitmap.GetHicon());
       }
     }
 
     protected override void OnPaint(PaintEventArgs e) {
       var graphics = e.Graphics;
-      IntPtr hdc;
-      if (m_CachedBitmapPtr == IntPtr.Zero) {
+      IntPtr hdc = IntPtr.Zero;
+      try {
         hdc = graphics.GetHdc();
-        unsafe {
-          m_CachedBitmapPtr = (IntPtr)BitmapUtility.CreateCachedBitmapPtr((void*)m_BitmapPtr, (void*)hdc);
+        using (var unmanagedGraphics = new UnmanagedGraphics(hdc)) {
+          if (m_CachedBitmap == null) {
+            m_CachedBitmap = new UnmanagedCachedBitmap(m_Bitmap, unmanagedGraphics);
+          }
+          unmanagedGraphics.DrawCachedBitmap(m_CachedBitmap, 0, 0);
         }
-        graphics.ReleaseHdc(hdc);
+      } finally {
+        if (hdc != IntPtr.Zero) {
+          graphics.ReleaseHdc(hdc);
+        }
       }
-
-      hdc = graphics.GetHdc();
-      unsafe {
-        BitmapUtility.DrawCachedBitmap((void*)hdc, (void*)m_CachedBitmapPtr, 0, 0);
-      }
-      graphics.ReleaseHdc(hdc);
     }
   }
 }
