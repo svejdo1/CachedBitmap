@@ -3,6 +3,7 @@
 #include <gdiplus.h>
 
 #include "IGraphics.h"
+#include "Config.h"
 #include "ICachedBitmap.h"
 
 using namespace Gdiplus;
@@ -22,9 +23,16 @@ namespace CachedBitmapUtility {
 				_isDisposed = false;
 				_graphics = new Graphics((HDC)hdc->ToPointer());
 			}
-			virtual void DrawCachedBitmap(ICachedBitmap^ cachedBitmap, int x, int y) {
+			virtual CachedBitmapUtility::Status DrawCachedBitmap(ICachedBitmap^ cachedBitmap, int x, int y) {
 				CachedBitmap* bitmap = (CachedBitmap*)cachedBitmap->get_Instance()->ToPointer();
-				_graphics->DrawCachedBitmap(bitmap, x, y);
+				Gdiplus::Status status = _graphics->DrawCachedBitmap(bitmap, x, y);
+				return (CachedBitmapUtility::Status)((int)status);
+			}
+			virtual void RotateTransform(REAL angle) {
+				_graphics->RotateTransform(angle);
+			}
+			virtual void TranslateTransform(REAL x, REAL y) {
+				_graphics->TranslateTransform(x, y);
 			}
 			virtual System::IntPtr^ get_Instance() {
 				return gcnew System::IntPtr(_graphics);

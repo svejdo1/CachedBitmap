@@ -74,6 +74,7 @@
     <ClCompile Include="UnmanagedGraphics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="IBitmap.h" />
     <ClInclude Include="ICachedBitmap.h" />
     <ClInclude Include="IGraphics.h" />

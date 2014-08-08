@@ -26,8 +26,10 @@ namespace FormApplication {
           if (m_CachedBitmap == null) {
             m_CachedBitmap = new UnmanagedCachedBitmap(m_Bitmap, unmanagedGraphics);
           }
-          unmanagedGraphics.DrawCachedBitmap(m_CachedBitmap, 0, 0);
+          unmanagedGraphics.TranslateTransform(50, 50);
+          var status = unmanagedGraphics.DrawCachedBitmap(m_CachedBitmap, 0, 0);
         }
+      } catch(Exception ex) {
       } finally {
         if (hdc != IntPtr.Zero) {
           graphics.ReleaseHdc(hdc);
