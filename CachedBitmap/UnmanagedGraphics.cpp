@@ -28,6 +28,9 @@ namespace CachedBitmapUtility {
 				Gdiplus::Status status = _graphics->DrawCachedBitmap(bitmap, x, y);
 				return (CachedBitmapUtility::Status)((int)status);
 			}
+			virtual void ResetTransform() {
+				_graphics->ResetTransform();
+			}
 			virtual void RotateTransform(REAL angle) {
 				_graphics->RotateTransform(angle);
 			}

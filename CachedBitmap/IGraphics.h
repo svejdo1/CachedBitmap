@@ -8,6 +8,7 @@ namespace CachedBitmapUtility {
 	public interface class IGraphics {
 		public:
 			CachedBitmapUtility::Status DrawCachedBitmap(ICachedBitmap^ cachedBitmap, int x, int y);
+			void ResetTransform();
 			void RotateTransform(REAL angle);
 			void TranslateTransform(REAL x, REAL y);
 			System::IntPtr^ get_Instance();
